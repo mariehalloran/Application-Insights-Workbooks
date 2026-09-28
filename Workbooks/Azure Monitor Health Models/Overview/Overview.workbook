@@ -1,0 +1,457 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "nav",
+        "links": [
+          {
+            "id": "7bb31204-0d69-45f1-a309-9563b6f2bca7",
+            "linkTarget": "OpenBlade",
+            "linkLabel": "Create health model",
+            "style": "primary",
+            "icon": "Add",
+            "bladeOpenContext": {
+              "bladeName": "CreateForm_dx",
+              "extensionName": "Microsoft_CloudHealth_HealthModels",
+              "bladeParameters": []
+            }
+          }
+        ]
+      },
+      "customWidth": "100",
+      "name": "Create health model",
+      "styleSettings": {
+        "margin": "20px 0 15px 0"
+      }
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "02499e42-d098-47c6-81a8-74e09a28a8cb",
+            "version": "KqlParameterItem/1.0",
+            "name": "SimulateNoData",
+            "type": 1,
+            "value": "false",
+            "isHiddenWhenLocked": true
+          }
+        ],
+        "style": "pills"
+      },
+      "customWidth": "0",
+      "name": "Simulation state"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Filter",
+        "exportParameters": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "parameters": [
+                {
+                  "id": "2b6a9bde-d117-4acf-ab32-6f30d86e252b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscription",
+                  "label": "Subscriptions",
+                  "type": 6,
+                  "description": "Subscriptions containing Azure Monitor Health Models. Add missing subscriptions to your default subscriptions.",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "Resources\r\n| where type =~ 'microsoft.cloudhealth/healthmodels'\r\n| summarize Count = count() by subscriptionId\r\n| order by Count desc, subscriptionId asc\r\n| extend Rank = row_number()\r\n| project value = subscriptionId, label = subscriptionId, selected = Rank == 1",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "f6aa91e6-08cb-45c4-ab25-088773eceb02",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "MaxHealthModels",
+                  "type": 1,
+                  "value": "1000",
+                  "isHiddenWhenLocked": true
+                },
+                {
+                  "id": "9d531bed-7511-4f76-b4fc-a92291e1e4f3",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "HealthModelCount",
+                  "type": 1,
+                  "query": "Resources\r\n| where type =~ 'microsoft.cloudhealth/healthmodels'\r\n| summarize Count = count()\r\n| project value = tostring(Count)",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "b6f7ff80-bd97-4fe6-995d-0bc316127dc1",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "HealthModelLimitExceeded",
+                  "type": 1,
+                  "query": "Resources\r\n| where type =~ 'microsoft.cloudhealth/healthmodels'\r\n| summarize Count = count()\r\n| project value = iff(Count > toint('{MaxHealthModels}'), 'true', 'false')",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "1a25d38b-8c05-4b36-90c2-2fe3fc2d07d2",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Resources",
+                  "label": "Health Models",
+                  "type": 5,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "Resources\r\n| where type =~ 'microsoft.cloudhealth/healthmodels'\r\n| order by id asc\r\n| take {MaxHealthModels}\r\n| project value = id, label = name, selected = true, group = resourceGroup",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "isHiddenWhenLocked": false,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "be9c9fcc-f3e5-4570-8de6-817349d27e23",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "MetricSourceVisibility",
+                  "type": 1,
+                  "value": "hidden",
+                  "isHiddenWhenLocked": true
+                }
+              ],
+              "style": "formVertical"
+            },
+            "name": "Health Model parameters",
+            "styleSettings": {
+              "margin": "0"
+            }
+          }
+        ]
+      },
+      "customWidth": "25",
+      "name": "Health Model filters",
+      "conditionalVisibility": {
+        "parameterName": "SimulateNoData",
+        "comparison": "isEqualTo",
+        "value": "false"
+      },
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Too many health models selected\n\nThe selected subscriptions contain **{HealthModelCount}** health models. This workbook currently supports at most **{MaxHealthModels}**. Narrow the subscription selection to continue.",
+        "style": "error"
+      },
+      "customWidth": "75",
+      "conditionalVisibility": {
+        "parameterName": "HealthModelLimitExceeded",
+        "comparison": "isEqualTo",
+        "value": "true"
+      },
+      "name": "Health model limit warning",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "No health model metric data was found for the selected subscriptions",
+        "style": "info"
+      },
+      "customWidth": "100",
+      "conditionalVisibility": {
+        "parameterName": "SimulateNoData",
+        "comparison": "isEqualTo",
+        "value": "true"
+      },
+      "name": "No health model data",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook7ec455c1-e95a-42b6-8bb1-1218ec5b90a1",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 0,
+        "resourceType": "microsoft.cloudhealth/healthmodels",
+        "metricScope": 0,
+        "resourceParameter": "Resources",
+        "resourceIds": [
+          "{Resources}"
+        ],
+        "timeContext": {
+          "durationMs": 300000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.cloudhealth/healthmodels",
+            "metric": "microsoft.cloudhealth/healthmodels-Saturation-EntityCount",
+            "aggregation": 4,
+            "columnName": "Entity Count"
+          }
+        ],
+        "gridFormatType": 1,
+        "resourceLimit": 10000,
+        "gridSettings": {
+          "rowLimit": 10000
+        },
+        "timeGrain": "PT5M"
+      },
+      "name": "Entity count metric data",
+      "customWidth": "0",
+      "showPin": false,
+      "conditionalVisibility": {
+        "parameterName": "MetricSourceVisibility",
+        "comparison": "isEqualTo",
+        "value": "visible"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type =~ 'microsoft.cloudhealth/healthmodels'\r\n| where id in~ ({Resources:value})\r\n| project Name = id, Region = location",
+        "size": 0,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "Health model regions",
+      "customWidth": "0",
+      "showPin": false,
+      "conditionalVisibility": {
+        "parameterName": "MetricSourceVisibility",
+        "comparison": "isEqualTo",
+        "value": "visible"
+      }
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Total Entities",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"df762690-b835-4a0d-86fc-0e10712b6070\",\"mergeType\":\"table\",\"leftTable\":\"Entity count metric data\"}],\"projectRename\":[{\"originalName\":\"[Entity count metric data].Value\",\"mergedName\":\"Entity Count\",\"fromId\":\"df762690-b835-4a0d-86fc-0e10712b6070\"}]}",
+              "size": 4,
+              "queryType": 7,
+              "visualization": "stat",
+              "statSettings": {
+                "valueField": "Entity Count",
+                "valueAggregation": "Sum",
+                "colorSettings": {
+                  "type": "static",
+                  "mode": "background",
+                  "heatmapPalette": "greenRed",
+                  "thresholdsGrid": []
+                },
+                "iconSettings": {
+                  "thresholdsGrid": [
+                    {
+                      "representation": "dot-blue"
+                    },
+                    {
+                      "sourceColumn": "Entity Count",
+                      "operator": ">",
+                      "thresholdValue": "0",
+                      "representation": "resource"
+                    }
+                  ]
+                },
+                "numberFormatSettings": {
+                  "unit": 0,
+                  "options": {
+                    "style": "decimal",
+                    "useGrouping": true,
+                    "maximumFractionDigits": 0
+                  }
+                },
+                "tagText": "Entities",
+                "valueFontStyle": "xxLarge",
+                "tagTextPosition": "bottom"
+              }
+            },
+            "name": "Total entity count"
+          }
+        ]
+      },
+      "customWidth": "25",
+      "name": "Entity count card",
+      "styleSettings": {
+        "showBorder": true
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "HealthModelLimitExceeded",
+          "comparison": "isEqualTo",
+          "value": "false"
+        },
+        {
+          "parameterName": "SimulateNoData",
+          "comparison": "isEqualTo",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"b3489d99-7361-4e66-99c5-c96fd44834de\",\"mergeType\":\"innerunique\",\"leftTable\":\"Entity count metric data\",\"rightTable\":\"Health model regions\",\"leftColumn\":\"Name\",\"rightColumn\":\"Name\"}],\"projectRename\":[{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"},{\"originalName\":\"[Entity count metric data].Value\",\"mergedName\":\"Entity Count\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"}]}",
+        "size": 1,
+        "title": "Entity Distribution",
+        "showExportToExcel": true,
+        "queryType": 7,
+        "visualization": "map",
+        "mapSettings": {
+          "locInfo": "AzureLoc",
+          "locInfoColumn": "Region",
+          "sizeSettings": "Entity Count",
+          "sizeAggregation": "Sum",
+          "labelSettings": "Region",
+          "legendMetric": "Entity Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "nodeColorField": "Entity Count",
+            "colorAggregation": "Sum",
+            "type": "heatmap",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "customWidth": "50",
+      "name": "Regional Distribution",
+      "styleSettings": {
+        "showBorder": true
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "HealthModelLimitExceeded",
+          "comparison": "isEqualTo",
+          "value": "false"
+        },
+        {
+          "parameterName": "SimulateNoData",
+          "comparison": "isEqualTo",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\",\"mergeType\":\"innerunique\",\"leftTable\":\"Entity count metric data\",\"rightTable\":\"Health model regions\",\"leftColumn\":\"Name\",\"rightColumn\":\"Name\"}],\"projectRename\":[{\"originalName\":\"[Entity count metric data].Name\",\"mergedName\":\"Health Model\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Entity count metric data].Value\",\"mergedName\":\"Entity Count\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"}]}",
+        "size": 0,
+        "title": "Health Model Metrics",
+        "noDataMessage": "No five-minute EntityCount metric data was found for the selected health models on this page.",
+        "showExportToExcel": true,
+        "queryType": 7,
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Health Model",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "Region",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "Entity Count",
+              "formatter": 1,
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal",
+                  "useGrouping": true,
+                  "maximumFractionDigits": 0
+                }
+              }
+            }
+          ],
+          "rowLimit": 10000,
+          "filter": true
+        }
+      },
+      "customWidth": "100",
+      "name": "Entity count table",
+      "styleSettings": {
+        "showBorder": true
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "HealthModelLimitExceeded",
+          "comparison": "isEqualTo",
+          "value": "false"
+        },
+        {
+          "parameterName": "SimulateNoData",
+          "comparison": "isEqualTo",
+          "value": "false"
+        }
+      ]
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json",
+  "layout": {
+    "type": "flow"
+  }
+}
