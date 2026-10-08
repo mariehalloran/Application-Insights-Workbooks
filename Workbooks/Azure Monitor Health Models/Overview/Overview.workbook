@@ -376,7 +376,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\",\"mergeType\":\"leftouter\",\"leftTable\":\"Health model regions\",\"rightTable\":\"Entity count metric data\",\"leftColumn\":\"Name\",\"rightColumn\":\"Name\"}],\"projectRename\":[{\"originalName\":\"[Health model regions].Name\",\"mergedName\":\"Health Model\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"},{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"},{\"originalName\":\"[Entity count metric data].Value\",\"mergedName\":\"Entity Count\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"}]}",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\",\"mergeType\":\"leftouter\",\"leftTable\":\"Health model regions\",\"rightTable\":\"Entity count metric data\",\"leftColumn\":\"Name\",\"rightColumn\":\"Name\"}],\"projectRename\":[{\"originalName\":\"[Health model regions].Name\",\"mergedName\":\"Health Model\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"},{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"},{\"originalName\":\"[Entity count metric data].Value\",\"mergedName\":\"Entity Count Raw\",\"fromId\":\"fc85847a-1294-4346-abf8-d4d3cb0179c8\"},{\"originalName\":\"[Added column]\",\"mergedName\":\"Entity Count\",\"fromId\":null,\"isNewItem\":true,\"newItemData\":[{\"criteriaContext\":{\"leftOperand\":\"Entity Count Raw\",\"operator\":\"is Empty\",\"rightValType\":\"column\",\"resultValType\":\"static\",\"resultVal\":\"0\"}},{\"criteriaContext\":{\"operator\":\"Default\",\"rightValType\":\"column\",\"resultValType\":\"column\",\"resultVal\":\"Entity Count Raw\"}}]}]}",
         "size": 0,
         "queryType": 7,
         "visualization": "table",
@@ -655,52 +655,8 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"b3489d99-7361-4e66-99c5-c96fd44834de\",\"mergeType\":\"table\",\"leftTable\":\"Health model regions\"}],\"projectRename\":[{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"},{\"originalName\":\"[Health model regions].HealthModelCount\",\"mergedName\":\"Health Model Count\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"}]}",
-        "size": 1,
-        "title": "Health Model Distribution",
-        "showExportToExcel": true,
-        "queryType": 7,
-        "visualization": "map",
-        "mapSettings": {
-          "locInfo": "AzureLoc",
-          "locInfoColumn": "Region",
-          "sizeSettings": "Health Model Count",
-          "sizeAggregation": "Sum",
-          "labelSettings": "Region",
-          "legendMetric": "Health Model Count",
-          "legendAggregation": "Sum",
-          "itemColorSettings": {
-            "nodeColorField": "Health Model Count",
-            "colorAggregation": "Sum",
-            "type": "heatmap",
-            "heatmapPalette": "greenRed"
-          }
-        }
-      },
-      "customWidth": "50",
-      "name": "Health Model Regional Distribution",
-      "styleSettings": {
-        "showBorder": true
-      },
-      "conditionalVisibilities": [
-        {
-          "parameterName": "HealthModelLimitExceeded",
-          "comparison": "isEqualTo",
-          "value": "false"
-        },
-        {
-          "parameterName": "SimulateNoData",
-          "comparison": "isEqualTo",
-          "value": "false"
-        }
-      ]
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
         "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\",\"mergeType\":\"table\",\"leftTable\":\"Health model metrics with signal counts\"}],\"projectRename\":[{\"originalName\":\"[Health model metrics with signal counts].Health Model\",\"mergedName\":\"Health Model\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Health model metrics with signal counts].Region\",\"mergedName\":\"Region\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Health model metrics with signal counts].Entity Count\",\"mergedName\":\"Entity Count\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Health model metrics with signal counts].Metric Signal Count\",\"mergedName\":\"Metric Signal Count\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Health model metrics with signal counts].Log Signal Count\",\"mergedName\":\"Log Signal Count\",\"fromId\":\"2774626b-301b-4b49-a2e2-7587e4358fb1\"},{\"originalName\":\"[Added column]\",\"mergedName\":\"Total Signal Count\",\"fromId\":null,\"isNewItem\":true,\"newItemData\":[{\"criteriaContext\":{\"operator\":\"Default\",\"rightValType\":\"column\",\"resultValType\":\"expression\",\"resultVal\":\"[\\\"Metric Signal Count\\\"] + [\\\"Log Signal Count\\\"]\"}}]}]}",
-        "size": 0,
+        "size": 2,
         "title": "Health Model Metrics",
         "noDataMessage": "No health model metric data was found for the selected health models on this page.",
         "showExportToExcel": true,
@@ -775,6 +731,50 @@
       },
       "customWidth": "50",
       "name": "Health model metrics table",
+      "styleSettings": {
+        "showBorder": true
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "HealthModelLimitExceeded",
+          "comparison": "isEqualTo",
+          "value": "false"
+        },
+        {
+          "parameterName": "SimulateNoData",
+          "comparison": "isEqualTo",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"b3489d99-7361-4e66-99c5-c96fd44834de\",\"mergeType\":\"table\",\"leftTable\":\"Health model regions\"}],\"projectRename\":[{\"originalName\":\"[Health model regions].Region\",\"mergedName\":\"Region\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"},{\"originalName\":\"[Health model regions].HealthModelCount\",\"mergedName\":\"Health Model Count\",\"fromId\":\"b3489d99-7361-4e66-99c5-c96fd44834de\"}]}",
+        "size": 2,
+        "title": "Health Model Distribution",
+        "showExportToExcel": true,
+        "queryType": 7,
+        "visualization": "map",
+        "mapSettings": {
+          "locInfo": "AzureLoc",
+          "locInfoColumn": "Region",
+          "sizeSettings": "Health Model Count",
+          "sizeAggregation": "Sum",
+          "labelSettings": "Region",
+          "legendMetric": "Health Model Count",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "nodeColorField": "Health Model Count",
+            "colorAggregation": "Sum",
+            "type": "heatmap",
+            "heatmapPalette": "greenRed"
+          }
+        }
+      },
+      "customWidth": "50",
+      "name": "Health Model Regional Distribution",
       "styleSettings": {
         "showBorder": true
       },
